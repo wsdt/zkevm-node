@@ -6,7 +6,7 @@ General docu for local run: https://github.com/0xPolygonHermez/zkevm-node/blob/d
 
 For Blockscout repository: 
 1. `git clone git@github.com:0xPolygonHermez/blockscout.git`
-2. `cd blockscout`
+2. `cd blockscout/docker`
 3. `make build-prod`
 4. `docker tag hermeznetwork/zkevm-explorer hermeznetwork/hermez-node-blockscout`
 
