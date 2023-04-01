@@ -1,3 +1,58 @@
+# Layer 3: zkEVM on zkEVM
+Inspired by: https://ethresear.ch/t/native-rollup-a-new-paradigm-of-zk-rollup/14529
+
+## Crosschain Escrow for L3 <> L1 validity rollups
+Please find an exemplary project for this here: https://github.com/wsdt/risc0-bonsai_multichain-escrow
+
+## How to run this? 
+
+### Launch L1 & L2
+General docu for local run: https://github.com/0xPolygonHermez/zkevm-node/blob/develop/docs/running_local.md
+
+1. `docker build -t zkevm-node .` in root dir
+2. `cd test`
+3. `make run`
+
+For Blockscout repository (Block explorer):
+1. `git clone git@github.com:0xPolygonHermez/blockscout.git`
+2. `cd blockscout/docker`
+3. `make build-prod`
+4. `docker tag hermeznetwork/zkevm-explorer hermeznetwork/hermez-node-blockscout`
+
+Back in zkevm-node repo with `/test` as working directory
+1. `make run-explorer`
+2. `make send-transfers` (to test the network)
+
+### Launch L3
+There are two ways to launch L3:
+1. `make run-l3` (you will need to assign free ports to `docker-compose.l3.yml` and the configs in `config-l3/`)
+2. Using ngrok on a separate machine with the current stack (explained below)
+
+#### Using ngrok
+To avoid going through port assignment hell, you can simply run the prepared & maintained stack by Polygon on a separate machine and use ngrok to tunnel the ports to your local machine.
+
+Then simply replace the L1 RPC url with the L2 RPC url of the first stack to basically create a L3, which should just emulate a L3 (a validity rollup on a validity rollup) based on the native ZkEVM blog post mentioned above and to showcase the L1<>L3 crosschain escrow.
+
+#### Contracts
+You will need to deploy necessary contracts on your initial L2 which is now acting as L1 for your L3. 
+You can find the contracts repo here: https://github.com/wsdt/zkevm-contracts
+
+
+## Why did we do this?
+As Polygon's zkEVM Beta got live this week, we thought it would be cool to get their zkEVM running locally and putting it on top of the L2 zkEVM, to have a super simplistic L3 architecture.
+
+The trend seems to go towards a multi-layer architecture in future, such as L3's potentially for cross-chain compatibility, or L4's for privacy. Although, L3's might solve the interoperability issue between L3's and above, we might still have interoperability issues between lower layers.
+
+Thankfully, really smart people developed somewhat resilient bridges, LayerZero, Cosmos, Polkadot & others that get better every day. Nonetheless, going from L3 to L1, might require multiple steps.
+
+So we thought having a simple use case such as an Multichain Escrow between L1 and L3 could be a very interesting thought-model to exchange assets between networks that are not directly connected to each other such as L1's and L2's.
+
+Considering the nature of Validity rollups and it's finality characteristics in contrast to optimistic rollups, it should not make that much of a difference if someone uses validity proofs between L1 & L2, or L1 and L3 as long as the single layers are Validity rollups.
+
+
+----
+Original documentation: 
+
 # zkEVM Node
 
 zkEVM Node is a Go implementation of a node that operates the Polygon zkEVM Network.
